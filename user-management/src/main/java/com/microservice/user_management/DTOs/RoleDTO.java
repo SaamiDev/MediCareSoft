@@ -47,9 +47,9 @@ public class RoleDTO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Role {")
-                .append(" roleId = ").append(roleId).append("/")
-                .append(" name = ").append(roleName).append("/")
-                .append(" dateCreated = ").append(roleDateCreated).append("/")
+                .append(" roleId = ").append(roleId).append(",")
+                .append(" name = ").append(roleName).append(",")
+                .append(" dateCreated = ").append(roleDateCreated)
                 .append(" }");
 
         return sb.toString();

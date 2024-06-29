@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -13,6 +14,9 @@ import java.util.UUID;
         @Index(name = "idx_role_name", columnList = "DES_NAME")
 })
 public class Role {
+
+    private static final String PREFIX = "ROLE-";
+    private static final int ID_LENGTH = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,7 +75,17 @@ public class Role {
 
     @PrePersist
     protected void onCreate() {
-        this.roleId = UUID.randomUUID().toString();
+        this.roleId = PREFIX + generateRandomId(ID_LENGTH);
+        //this.roleId = UUID.randomUUID().toString();
         this.dateCreated = LocalDateTime.now();
+    }
+
+    private String generateRandomId(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
     }
 }

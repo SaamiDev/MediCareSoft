@@ -17,6 +17,9 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Optional<Role> findByName(String Name);
 
+    @Query("SELECT r FROM Role r where r.roleId = :roleId")
+    Optional<Role> findById(@Param("roleId") String roleId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Role r WHERE r.roleId = :roleId")

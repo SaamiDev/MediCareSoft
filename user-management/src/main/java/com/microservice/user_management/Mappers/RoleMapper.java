@@ -4,6 +4,7 @@ import com.microservice.user_management.DTOs.RoleDTO;
 import com.microservice.user_management.Entities.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -11,12 +12,14 @@ public interface RoleMapper {
 
     RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
 
+    @Named("roleToRoleDTO")
     @SuppressWarnings("unmappedTargetProperties")
     @Mapping(target = "roleId", source = "roleId")
     @Mapping(target = "roleName", source = "name")
     @Mapping(target = "roleDateCreated", source = "dateCreated")
     RoleDTO roleToRoleDTO(Role role);
 
+    @Named("roleDTOToRole")
     @SuppressWarnings("unmappedTargetProperties")
     @Mapping(target = "roleId", source = "roleId")
     @Mapping(target = "name", source = "roleName")

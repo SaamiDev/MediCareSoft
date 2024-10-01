@@ -17,7 +17,17 @@ public class RoleDTO {
 
     public RoleDTO() {}
 
+    public RoleDTO(String roleName) {
+        this.roleName = roleName;
+    }
 
+
+
+    public RoleDTO(LocalDateTime roleDateCreated, String roleId, String roleName) {
+        this.roleDateCreated = roleDateCreated;
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
 
     public String getRoleName() {
         return roleName;

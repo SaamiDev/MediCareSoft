@@ -4,6 +4,8 @@ import com.microservice.user_management.DTOs.RoleDTO;
 import com.microservice.user_management.Service.RoleService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,20 @@ public class RoleController {
 
     }
 
+    @GetMapping("count/{roleId}")
+    public ResponseEntity<Long> getCount(@PathVariable Long roleId) {
+        logger.info("Received request to get count users of role with id {}", roleId);
+        try {
+            Long countUsers = roleService.getCount(roleId);
+            return new ResponseEntity<>(countUsers, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching count Users", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
     @GetMapping("/all")
     public ResponseEntity<List<RoleDTO>> getAll() {
         logger.info("Received request to get all Roles");
@@ -60,11 +76,11 @@ public class RoleController {
     }
 
 
-    @DeleteMapping("/{roleId}")
-    public ResponseEntity<RoleDTO> deleteRole(@PathVariable String roleId) {
-        logger.info("Received request to delete Role whith id: {}", roleId);
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteRole(@RequestBody RoleDTO roleDTO) {
+        logger.info("Received request to delete Role whith id: {}", roleDTO.getRoleId());
         try {
-            roleService.deleteRole(roleId);
+            roleService.deleteRole(roleDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             logger.error("ResponseStatusException ocurred: {}", e.getMessage());

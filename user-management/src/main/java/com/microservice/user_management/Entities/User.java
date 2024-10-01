@@ -18,7 +18,7 @@ public class User {
     private Long id;
 
     @Column(name = "COD_USER_ID", updatable = false, nullable = false)
-    private String user_id;
+    private String userId;
 
     @Column(name = "DES_NAME")
     private String name;
@@ -41,21 +41,15 @@ public class User {
     @Column(name = "DATE_UPDATED")
     private LocalDateTime dateUpdated;
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "COD_USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "COD_ROLE_ID")
-    )*/
 
-    @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cod_role_id", referencedColumnName = "id", nullable = true)
     private Role role;
 
     public User() {}
     @PrePersist
     protected void onCreate() {
-        this.user_id = UUID.randomUUID().toString();
+        this.userId = UUID.randomUUID().toString();
         this.dateCreated = LocalDateTime.now();
     }
     @PreUpdate
@@ -135,11 +129,11 @@ public class User {
         this.name = name;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getuserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setuserId(String userId) {
+        this.userId = userId;
     }
 }

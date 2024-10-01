@@ -22,7 +22,6 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(name = "COD_ROLE_ID", updatable = false, nullable = false)
     private String roleId;
 
@@ -57,7 +56,7 @@ public class Role {
         return roleId;
     }
 
-    public void setRoleId(String role_id) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 

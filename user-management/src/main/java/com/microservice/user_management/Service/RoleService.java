@@ -2,22 +2,19 @@ package com.microservice.user_management.Service;
 
 import com.microservice.user_management.DTOs.RoleDTO;
 import com.microservice.user_management.Entities.Role;
-import com.microservice.user_management.Entities.RoleType;
-import com.microservice.user_management.Entities.User;
-import com.microservice.user_management.Exceptions.RoleNotFoundException;
+import com.microservice.user_management.Exceptions.RoleExceptions.RoleNotFoundException;
+import com.microservice.user_management.Exceptions.RoleExceptions.RoleNotUpdateToDefault;
+import com.microservice.user_management.Exceptions.RoleExceptions.RolesNotFoundException;
 import com.microservice.user_management.Mappers.RoleMapper;
-import com.microservice.user_management.Mappers.UserMapper;
 import com.microservice.user_management.Repositories.RoleRepository;
 import com.microservice.user_management.Repositories.UserRepository;
 import com.microservice.user_management.Utils.RoleUtils;
 import jakarta.transaction.Transactional;
-import org.apache.tomcat.util.bcel.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +36,7 @@ public class RoleService {
     @Autowired
     RoleUtils roleUtils;
 
-    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
 
 
     @Transactional
@@ -51,44 +48,48 @@ public class RoleService {
 
         Role roleSaved = roleRepository.save(roleMapper.roleDTOToRole(roleDTO));
         RoleDTO savedRoleDTO = roleMapper.roleToRoleDTO(roleSaved);
-        logger.info("Role saved successfully: {}", roleDTO);
+        LOGGER.info("Role saved successfully: {}", roleDTO);
         return savedRoleDTO;
     }
 
     @Transactional
-    public void deleteRole(RoleDTO roleDTO) {
-        Role actualRole = roleMapper.roleDTOToRole(roleDTO);
-        Optional<Role> defaultRole = roleRepository.findByName("DEFAULT");
+    public void deleteRole(RoleDTO roleDTO)  {
 
+        Role actualRole = roleUtils.findRoleOrThrow(roleDTO.getRoleName());
+        LOGGER.info("Info of actualRole {}", roleDTO);
 
-        // Esto verifica si el rol existe
-        roleRepository.findById(actualRole.getId())
-                .orElseThrow(() -> {
-                    logger.error("Error deleting role because not exist nothing whith Id: {}", actualRole.getRoleId());
-                    return new RoleNotFoundException("Error: Role with ID " + actualRole.getRoleId() + " does not exist.");
-                });
+        Role defaultRole = roleUtils.findDefaultRoleOrThrow();
+        RoleDTO defaultRoleDTO = roleMapper.roleToRoleDTO(defaultRole);
+
+        LOGGER.info("Info of defaultRole {}", defaultRoleDTO);
 
         Long countUser = roleUtils.countUserByRole(actualRole.getId());
+        LOGGER.info("The role {} has {} users", actualRole.getName(), countUser);
 
-        if(countUser > 0 ) {
-            userRepository.updateRoleToDefault(defaultRole.get().getId(), actualRole.getId());
+        if (countUser > 0) {
+            try {
+                userRepository.updateRoleToDefault(defaultRole.getId(), actualRole.getId());
+                LOGGER.info("{} Users successfully updated to DEFAULT role", countUser);
+            } catch (Exception e) {
+                LOGGER.error("Users successfully updated to DEFAULT role");
+                throw new RoleNotUpdateToDefault();
+            }
+
         }
 
-        //roleRepository.deleteByRoleId(idRole);
-        //logger.info("Role whith Id {} deleted successfully", idRole);
     }
 
     public Long getCount(Long idRole) {
            Long countUsers = roleUtils.countUserByRole(idRole);
-           logger.info("For de Role with ID {} there are {} users", idRole, countUsers);
+        LOGGER.info("For de Role with ID {} there are {} users", idRole, countUsers);
            return countUsers;
     }
 
     public List<RoleDTO> getAll() {
         List<Role> roleList =  roleRepository.findAll();
         if (roleList.isEmpty()) {
-            logger.warn("No roles found in the database");
-            throw new RoleNotFoundException("No roles found in the database");
+            LOGGER.warn("No roles found in the database");
+            throw new RolesNotFoundException();
         }
         return roleList.stream()
                 .map(roleMapper::roleToRoleDTO)

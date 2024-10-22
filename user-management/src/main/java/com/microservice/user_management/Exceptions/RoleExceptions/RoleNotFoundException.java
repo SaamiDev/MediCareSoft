@@ -8,4 +8,5 @@ public class RoleNotFoundException extends RoleException{
         super("Role" + roleName + "not found");
     }
 
+
 }

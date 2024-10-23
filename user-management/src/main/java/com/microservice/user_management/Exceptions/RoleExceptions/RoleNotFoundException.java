@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Role;
 public class RoleNotFoundException extends RoleException{
 
     public RoleNotFoundException(String roleName) {
-        super("Role" + roleName + "not found");
+        super("Role " + roleName + " not found in database");
     }
 
 

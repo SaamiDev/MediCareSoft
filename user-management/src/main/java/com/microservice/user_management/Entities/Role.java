@@ -32,10 +32,10 @@ public class Role {
     private LocalDateTime dateCreated;
 
 
-    public Role(String roleId,String name, LocalDateTime dateCreated) {
-        this.roleId = roleId;
+    public Role(String name) {
+        this.roleId = PREFIX + UUID.randomUUID().toString();
         this.name = name;
-        this.dateCreated = dateCreated;
+        this.dateCreated = LocalDateTime.now();
     }
 
     public Role() {}
@@ -70,13 +70,6 @@ public class Role {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.roleId = PREFIX + generateRandomId(ID_LENGTH);
-        //this.roleId = UUID.randomUUID().toString();
-        this.dateCreated = LocalDateTime.now();
     }
 
     private String generateRandomId(int length) {

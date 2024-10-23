@@ -2,7 +2,7 @@ package com.microservice.user_management.Service;
 
 import com.microservice.user_management.DTOs.RoleDTO;
 import java.util.List;
-
+import java.util.Optional;
 
 
 public interface RoleService {
@@ -13,7 +13,7 @@ public interface RoleService {
 
     RoleDTO update(RoleDTO roleDTO);
 
-    Long getCount(Long idRole);
+    Optional<Long>getCount(Long idRole);
 
     List<RoleDTO> getAll();
 

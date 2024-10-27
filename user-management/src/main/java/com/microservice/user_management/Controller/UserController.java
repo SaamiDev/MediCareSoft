@@ -23,22 +23,6 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostMapping("")
-    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
-
-        try {
-            UserDTO saveUser = userService.saveUser(userDTO);
-            return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            logger.error("ResponseStatusException occurred: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
-            logger.error("Internal server error occurred", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error occurred while processing the request", e);
-        }
-
-
-    }
 
 
 

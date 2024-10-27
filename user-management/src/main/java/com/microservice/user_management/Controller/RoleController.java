@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -30,9 +32,9 @@ public class RoleController {
     }
 
     @GetMapping("/count/{roleId}")
-    public ResponseEntity<Long> getCount(@PathVariable Long roleId) {
+    public ResponseEntity<Optional> getCount(@PathVariable Long roleId) {
         LOGGER.info("Received request to get count of users for role ID: {}", roleId);
-        Long countUsers = roleService.getCount(roleId);
+        Optional<Long> countUsers = roleService.getCount(roleId);
         return ResponseEntity.ok(countUsers);
     }
 

@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 
 
-@RestController
-@RequestMapping("/api/auth")
-public class AuthController {
-
-    @Autowired
-    AuthService authService;
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
-    @PostMapping("/register")
-    public ResponseEntity<RegisterDTO> register(@RequestBody RegisterDTO registerDTO) {
-        logger.info("Received request to save User: {}", registerDTO);
-
-        try {
-            RegisterDTO newUser = authService.register(registerDTO);
-            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-}
+//@RestController
+//@RequestMapping("/api/auth")
+//public class AuthController {
+//
+//    @Autowired
+//    AuthService authService;
+//
+//    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+//
+//    @PostMapping("/register")
+//    public ResponseEntity<RegisterDTO> register(@RequestBody RegisterDTO registerDTO) {
+//        logger.info("Received request to save User: {}", registerDTO);
+//
+//        try {
+//            RegisterDTO newUser = authService.register(registerDTO);
+//            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+//        } catch (IllegalArgumentException e) {
+//            logger.error(e.getMessage());
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
+//}
